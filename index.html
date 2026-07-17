@@ -435,6 +435,7 @@
     .memory-stage.is-solved .memory-success {
       opacity: 1;
       visibility: visible;
+      pointer-events: auto;
       transform: translateY(0) scale(1);
       transition: opacity 440ms ease 200ms, transform 660ms cubic-bezier(.16,1,.3,1) 200ms, visibility 0s;
     }
@@ -459,6 +460,18 @@
       font-size: clamp(1rem, 2vw, 1.12rem);
       line-height: 1.65;
       text-wrap: balance;
+    }
+
+    .memory-continue-button {
+      margin-top: 1.8rem;
+      color: #2b0717;
+      background: var(--rose);
+      box-shadow: 0 14px 38px rgba(255, 79, 143, 0.28);
+    }
+
+    .memory-continue-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 20px 48px rgba(255, 79, 143, 0.43);
     }
 
     @keyframes memoryShake {
@@ -1400,6 +1413,7 @@
       .memory-question-copy { margin: 1rem auto 1.3rem; font-size: 0.98rem; }
       .memory-date-input { height: 70px; border-radius: 17px; font-size: clamp(1.7rem, 8vw, 2.15rem); }
       .memory-success h2 { font-size: clamp(3.2rem, 15vw, 5rem); }
+      .memory-continue-button { margin-top: 1.45rem; }
       .love-stage { padding: 1rem; }
       .love-stage-content { min-height: min(620px, calc(100dvh - 2rem)); }
       .love-frames { gap: clamp(0.8rem, 3vw, 1.6rem); }
@@ -1529,6 +1543,7 @@
         <h2>Eu sabia.</h2>
         <p class="memory-success-date">26 de abril de 2026.</p>
         <p class="memory-success-copy">Foi o dia em que a gente decidiu parar de s&#243; falar e tentar de verdade. Eu guardei essa data porque foi quando come&#231;ou o nosso agora.</p>
+        <button class="memory-continue-button" id="memory-continue" type="button">Continuar nossa hist&#243;ria</button>
       </div>
     </div>
   </section>
@@ -1654,6 +1669,7 @@
     const memoryDateInput = document.querySelector('#memory-date');
     const memoryFeedback = document.querySelector('#memory-feedback');
     const memorySuccess = document.querySelector('#memory-success');
+    const memoryContinue = document.querySelector('#memory-continue');
     const loveStage = document.querySelector('#love-stage');
     const loveIntro = document.querySelector('#love-intro');
     const loveReveal = document.querySelector('#love-reveal');
@@ -1693,6 +1709,7 @@
     let progressTaps = 0;
     let memoryAttempts = 0;
     let memorySolved = false;
+    let memoryContinuing = false;
     let memoryResetTimer;
     let loveSequenceStarted = false;
     let suspenseReadyTimer;
@@ -1715,28 +1732,29 @@
     }
 
     function continueAfterMemory() {
-      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      const revealDelay = reducedMotion ? 500 : 1850;
+      if (!memorySolved || memoryContinuing) return;
+      memoryContinuing = true;
+      memoryContinue.disabled = true;
 
-      setTimeout(() => {
-        loveStage.hidden = false;
-        loveStage.setAttribute('aria-hidden', 'false');
-        startLoveSequence();
-      }, revealDelay);
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      loveStage.hidden = false;
+      loveStage.setAttribute('aria-hidden', 'false');
+      startLoveSequence();
 
       setTimeout(() => {
         loveStage.classList.add('show');
-      }, revealDelay + (reducedMotion ? 0 : 500));
+      }, reducedMotion ? 0 : 500);
 
       setTimeout(() => {
         memoryStage.classList.add('hide');
-      }, revealDelay + (reducedMotion ? 10 : 700));
+      }, reducedMotion ? 10 : 700);
 
       setTimeout(() => {
         memoryStage.classList.remove('show', 'hide', 'is-asking', 'is-solved');
         memoryStage.hidden = true;
         memoryStage.setAttribute('aria-hidden', 'true');
-      }, revealDelay + (reducedMotion ? 30 : 1160));
+      }, reducedMotion ? 30 : 1160);
     }
 
     function solveMemoryChallenge() {
@@ -1744,6 +1762,7 @@
       memorySolved = true;
       clearTimeout(memoryResetTimer);
       memoryDateInput.disabled = true;
+      memoryDateInput.blur();
       memoryDateInput.setAttribute('aria-invalid', 'false');
       memoryDateInput.classList.remove('is-wrong');
       memoryFeedback.textContent = '';
@@ -1751,7 +1770,8 @@
       memorySuccess.setAttribute('aria-hidden', 'false');
       memoryStage.classList.remove('is-asking');
       memoryStage.classList.add('is-solved');
-      continueAfterMemory();
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      setTimeout(() => memoryContinue.focus({ preventScroll: true }), reducedMotion ? 20 : 720);
     }
 
     function validateMemoryDate() {
@@ -1812,6 +1832,8 @@
       event.preventDefault();
       validateMemoryDate();
     });
+
+    memoryContinue.addEventListener('click', continueAfterMemory);
 
     function startLoveSequence() {
       if (loveSequenceStarted) return;
