@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="pt-BR">
+<html lang="pt-BR" class="experience-locked">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -21,7 +21,30 @@
 
     * { box-sizing: border-box; }
 
-    html { background: var(--ink); }
+    [hidden] { display: none !important; }
+
+    html {
+      min-height: 100%;
+      background: var(--ink);
+    }
+
+    html.experience-locked,
+    body.experience-locked {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      overscroll-behavior: none;
+    }
+
+    body.experience-locked {
+      position: fixed;
+      inset: 0;
+    }
+
+    body.experience-locked .page,
+    body.experience-locked > .hearts {
+      display: none;
+    }
 
     body {
       min-height: 100dvh;
@@ -52,20 +75,21 @@
       place-items: center;
       padding: 1.5rem;
       overflow: hidden;
+      overscroll-behavior: none;
+      touch-action: none;
       background: #15070e;
       transition: clip-path 1.15s cubic-bezier(.76,0,.24,1), visibility 1.15s step-end;
     }
 
     .intro::before {
       position: absolute;
-      inset: -4%;
+      inset: 0;
       content: "";
-      opacity: 0.22;
+      opacity: 1;
       background:
-        linear-gradient(90deg, rgba(22, 9, 15, 0.94), rgba(31, 7, 19, 0.55)),
-        url("img/photo_2026-07-17_15-44-48.jpg") center / cover;
-      filter: blur(12px) saturate(0.8);
-      transform: scale(1.1);
+        radial-gradient(circle at 50% 20%, rgba(255, 79, 143, 0.12), transparent 22rem),
+        radial-gradient(circle at 8% 88%, rgba(126, 26, 68, 0.16), transparent 28rem),
+        #15070e;
     }
 
     .intro::after {
@@ -83,9 +107,14 @@
 
     .heart-transition,
     .progress-stage,
+    .memory-stage,
     .love-stage {
       position: fixed;
       inset: 0;
+      width: 100%;
+      height: 100dvh;
+      min-height: 100dvh;
+      max-height: 100dvh;
       display: grid;
       place-items: center;
       padding: 1.5rem;
@@ -135,9 +164,13 @@
     .heart-transition.open .heart-shape { animation: heartOpen 1.25s cubic-bezier(.76,0,.24,1) forwards; }
 
     .progress-stage,
+    .memory-stage,
     .love-stage {
       z-index: 70;
       overflow: auto;
+      overscroll-behavior: contain;
+      -webkit-overflow-scrolling: touch;
+      touch-action: pan-y;
       background:
         radial-gradient(circle at 50% 15%, rgba(255,79,143,0.17), transparent 25rem),
         #16090f;
@@ -146,6 +179,7 @@
     }
 
     .progress-stage.show,
+    .memory-stage.show,
     .love-stage.show {
       opacity: 1;
       visibility: visible;
@@ -155,6 +189,7 @@
     }
 
     .progress-stage.hide,
+    .memory-stage.hide,
     .love-stage.hide {
       opacity: 0;
       visibility: hidden;
@@ -208,6 +243,228 @@
     }
 
     .tap-count { min-height: 1.2rem; margin: 0.8rem 0 0; color: var(--rose-light); font-size: 0.82rem; }
+
+    .memory-stage {
+      z-index: 70;
+    }
+
+    .memory-shell {
+      position: relative;
+      display: grid;
+      width: min(100%, 780px);
+      min-height: min(680px, calc(100dvh - 3rem));
+      place-items: center;
+      text-align: center;
+    }
+
+    .memory-story,
+    .memory-question,
+    .memory-success {
+      grid-area: 1 / 1;
+      width: 100%;
+      padding: 1.5rem 0;
+    }
+
+    .memory-story {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0) scale(1);
+      transition: opacity 420ms ease, transform 600ms cubic-bezier(.16,1,.3,1), visibility 0s;
+    }
+
+    .memory-stage.is-asking .memory-story,
+    .memory-stage.is-solved .memory-story {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: translateY(-24px) scale(1.02);
+      transition: opacity 340ms ease, transform 440ms cubic-bezier(.7,0,.84,0), visibility 0s 340ms;
+    }
+
+    .memory-heart {
+      display: grid;
+      place-items: center;
+      width: 4.5rem;
+      height: 4.5rem;
+      margin: 0 auto 1.4rem;
+      color: var(--rose);
+      font-size: 2rem;
+      border: 1px solid rgba(255, 151, 189, 0.32);
+      border-radius: 50%;
+      background: rgba(255, 79, 143, 0.08);
+      box-shadow: 0 0 50px rgba(255, 79, 143, 0.18);
+    }
+
+    .memory-story h2,
+    .memory-question h2,
+    .memory-success h2 {
+      margin: 0 auto;
+      font-weight: 850;
+      letter-spacing: -0.07em;
+      line-height: 0.96;
+      text-wrap: balance;
+    }
+
+    .memory-story h2 {
+      max-width: 11ch;
+      font-size: clamp(3rem, 7vw, 5.7rem);
+    }
+
+    .memory-copy {
+      max-width: 40rem;
+      margin: 1.7rem auto 0;
+    }
+
+    .memory-copy p {
+      margin: 0.75rem 0 0;
+      color: var(--muted);
+      font-size: clamp(1rem, 2vw, 1.12rem);
+      line-height: 1.62;
+      text-wrap: balance;
+    }
+
+    .memory-reveal-button {
+      margin-top: 2rem;
+      color: #2b0717;
+      background: var(--rose);
+      box-shadow: 0 14px 38px rgba(255, 79, 143, 0.28);
+    }
+
+    .memory-question,
+    .memory-success {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: translateY(24px) scale(0.98);
+      transition: opacity 400ms ease, transform 560ms cubic-bezier(.16,1,.3,1), visibility 0s 400ms;
+    }
+
+    .memory-stage.is-asking .memory-question {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: translateY(0) scale(1);
+      transition: opacity 460ms ease 180ms, transform 680ms cubic-bezier(.16,1,.3,1) 180ms, visibility 0s;
+    }
+
+    .memory-stage.is-solved .memory-question {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: translateY(-22px) scale(1.02);
+      transition: opacity 320ms ease, transform 420ms cubic-bezier(.7,0,.84,0), visibility 0s 320ms;
+    }
+
+    .memory-question h2 {
+      max-width: 12ch;
+      font-size: clamp(2.8rem, 7vw, 5.3rem);
+    }
+
+    .memory-question-copy {
+      max-width: 34rem;
+      margin: 1.2rem auto 1.65rem;
+      color: var(--muted);
+      font-size: clamp(1rem, 2vw, 1.1rem);
+      line-height: 1.6;
+      text-wrap: balance;
+    }
+
+    .memory-date-label {
+      display: block;
+      margin: 0 auto 0.65rem;
+      color: var(--rose-light);
+      font-size: 0.83rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .memory-date-input {
+      display: block;
+      width: min(100%, 390px);
+      height: 78px;
+      margin: 0 auto;
+      padding: 0 1rem;
+      color: var(--text);
+      caret-color: var(--rose);
+      border: 1px solid rgba(255, 211, 227, 0.3);
+      border-radius: 20px;
+      outline: none;
+      background: rgba(255, 255, 255, 0.07);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 18px 50px rgba(0,0,0,0.24);
+      font: inherit;
+      font-size: clamp(1.75rem, 6vw, 2.5rem);
+      font-weight: 850;
+      letter-spacing: 0.08em;
+      text-align: center;
+      transition: border-color 220ms ease, background 220ms ease, box-shadow 220ms ease, transform 220ms ease;
+    }
+
+    .memory-date-input::placeholder { color: rgba(255, 211, 227, 0.38); opacity: 1; }
+
+    .memory-date-input:focus {
+      border-color: rgba(255, 79, 143, 0.85);
+      background: rgba(255, 255, 255, 0.1);
+      box-shadow: 0 0 0 4px rgba(255, 79, 143, 0.12), 0 20px 58px rgba(0,0,0,0.3);
+    }
+
+    .memory-date-input.is-wrong {
+      border-color: rgba(255, 151, 189, 0.9);
+      animation: memoryShake 420ms cubic-bezier(.36,.07,.19,.97);
+    }
+
+    .memory-format {
+      margin: 0.75rem 0 0;
+      color: rgba(255, 211, 227, 0.7);
+      font-size: 0.82rem;
+      line-height: 1.5;
+    }
+
+    .memory-format strong { color: var(--rose-light); letter-spacing: 0.08em; }
+
+    .memory-feedback {
+      min-height: 1.5rem;
+      max-width: 32rem;
+      margin: 0.8rem auto 0;
+      color: var(--rose-light);
+      font-size: 0.9rem;
+      font-weight: 700;
+      line-height: 1.5;
+    }
+
+    .memory-stage.is-solved .memory-success {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0) scale(1);
+      transition: opacity 440ms ease 200ms, transform 660ms cubic-bezier(.16,1,.3,1) 200ms, visibility 0s;
+    }
+
+    .memory-success h2 {
+      max-width: 9ch;
+      font-size: clamp(3.5rem, 9vw, 6.4rem);
+    }
+
+    .memory-success-date {
+      margin: 1.2rem 0 0;
+      color: var(--rose);
+      font-size: clamp(1.35rem, 3.5vw, 2rem);
+      font-weight: 850;
+      letter-spacing: -0.035em;
+    }
+
+    .memory-success-copy {
+      max-width: 35rem;
+      margin: 1rem auto 0;
+      color: var(--muted);
+      font-size: clamp(1rem, 2vw, 1.12rem);
+      line-height: 1.65;
+      text-wrap: balance;
+    }
+
+    @keyframes memoryShake {
+      20%, 60% { transform: translateX(-8px); }
+      40%, 80% { transform: translateX(8px); }
+    }
 
     .love-stage-content {
       position: relative;
@@ -379,11 +636,18 @@
     .letter-suspense {
       position: fixed;
       inset: 0;
+      width: 100%;
+      height: 100dvh;
+      min-height: 100dvh;
+      max-height: 100dvh;
       z-index: 75;
       display: grid;
       place-items: center;
       padding: clamp(1.25rem, 4vw, 2.5rem);
       overflow: auto;
+      overscroll-behavior: contain;
+      -webkit-overflow-scrolling: touch;
+      touch-action: pan-y;
       isolation: isolate;
       background:
         radial-gradient(circle at 50% 16%, rgba(255, 79, 143, 0.17), transparent 25rem),
@@ -568,11 +832,18 @@
     .declaration {
       position: fixed;
       inset: 0;
+      width: 100%;
+      height: 100dvh;
+      min-height: 100dvh;
+      max-height: 100dvh;
       z-index: 40;
       display: grid;
       place-items: center;
       padding: 1.5rem;
       overflow: auto;
+      overscroll-behavior: contain;
+      -webkit-overflow-scrolling: touch;
+      touch-action: pan-y;
       background:
         radial-gradient(circle at 85% 13%, rgba(255, 79, 143, 0.18), transparent 26rem),
         #16090f;
@@ -991,14 +1262,16 @@
       place-items: center;
       padding: 1.5rem;
       overflow-y: auto;
-      background: rgba(20, 4, 12, 0.7);
-      opacity: 0;
+      overscroll-behavior: contain;
+      -webkit-overflow-scrolling: touch;
+      background:
+        radial-gradient(circle at 50% 12%, rgba(255, 79, 143, 0.2), transparent 26rem),
+        #13060d;
+      visibility: hidden;
       pointer-events: none;
-      transition: opacity 450ms ease;
-      backdrop-filter: blur(12px);
     }
 
-    .success.show { opacity: 1; pointer-events: auto; }
+    .success.show { visibility: visible; pointer-events: auto; }
 
     .success-card {
       width: min(100%, 700px);
@@ -1113,6 +1386,20 @@
       .hearts span:nth-child(1) { right: 10%; }
       .intro::after { inset: 0.75rem; }
       .intro-heart { margin-bottom: 1.75rem; }
+      .memory-stage { padding: 1rem; }
+      .memory-shell { min-height: min(650px, calc(100dvh - 2rem)); }
+      .memory-story,
+      .memory-question,
+      .memory-success { padding: 1.5rem 0.35rem; }
+      .memory-heart { width: 4rem; height: 4rem; margin-bottom: 1.1rem; font-size: 1.8rem; }
+      .memory-story h2 { max-width: 10ch; font-size: clamp(2.6rem, 11.5vw, 4.15rem); }
+      .memory-copy { margin-top: 1.25rem; }
+      .memory-copy p { font-size: 0.98rem; line-height: 1.55; }
+      .memory-reveal-button { margin-top: 1.55rem; }
+      .memory-question h2 { max-width: 11ch; font-size: clamp(2.55rem, 11vw, 4rem); }
+      .memory-question-copy { margin: 1rem auto 1.3rem; font-size: 0.98rem; }
+      .memory-date-input { height: 70px; border-radius: 17px; font-size: clamp(1.7rem, 8vw, 2.15rem); }
+      .memory-success h2 { font-size: clamp(3.2rem, 15vw, 5rem); }
       .love-stage { padding: 1rem; }
       .love-stage-content { min-height: min(620px, calc(100dvh - 2rem)); }
       .love-frames { gap: clamp(0.8rem, 3vw, 1.6rem); }
@@ -1142,6 +1429,13 @@
     }
 
     @media (max-width: 520px) {
+      .memory-stage { place-items: start center; }
+      .memory-shell { min-height: min(610px, calc(100dvh - 2rem)); }
+      .memory-story,
+      .memory-question,
+      .memory-success { padding-top: 1.75rem; padding-bottom: 1.75rem; }
+      .memory-format { margin-top: 0.65rem; }
+      .memory-feedback { margin-top: 0.65rem; font-size: 0.84rem; }
       .photo-wall { gap: 0.75rem; }
       .photo-wall figure { border-radius: 13px; }
       .success { padding: 0.85rem; }
@@ -1166,7 +1460,7 @@
     }
   </style>
 </head>
-<body>
+<body class="experience-locked">
   <div class="grain" aria-hidden="true"></div>
   <audio id="love-song" loop preload="auto" autoplay>
     <source src="music/Henrique e Juliano - VEM PRA MINHA VIDA - DVD O C%C3%A9u Explica Tudo.mp3" type="audio/mpeg" />
@@ -1180,10 +1474,10 @@
       <button class="enter-button" id="enter" type="button">Estou pronta</button>
     </div>
   </section>
-  <section class="heart-transition" id="heart-transition" aria-label="Uma transi&#231;&#227;o em forma de cora&#231;&#227;o">
+  <section class="heart-transition" id="heart-transition" hidden aria-hidden="true" aria-label="Uma transi&#231;&#227;o em forma de cora&#231;&#227;o">
     <div class="heart-shape" aria-hidden="true"></div>
   </section>
-  <section class="progress-stage" id="progress-stage" aria-labelledby="progress-title">
+  <section class="progress-stage" id="progress-stage" hidden aria-hidden="true" aria-labelledby="progress-title">
     <div class="progress-card">
       <h2 id="progress-title">Clique aqui.</h2>
       <p id="progress-copy">Preenche essa barrinha com carinho. Ainda falta um pouquinho.</p>
@@ -1192,7 +1486,53 @@
       <p class="tap-count" id="tap-count" aria-live="polite">0 de 7 toques</p>
     </div>
   </section>
-  <section class="love-stage" id="love-stage" aria-labelledby="love-title">
+  <section class="memory-stage" id="memory-stage" hidden aria-hidden="true" aria-labelledby="memory-title">
+    <div class="memory-shell">
+      <article class="memory-story" id="memory-story">
+        <div class="memory-heart" aria-hidden="true">&#10084;</div>
+        <h2 id="memory-title">A vida trouxe a gente de volta.</h2>
+        <div class="memory-copy">
+          <p>Tem hist&#243;ria que come&#231;a uma vez e pronto. A nossa resolveu dar uma volta de quase dez anos, cada um vivendo a pr&#243;pria vida, at&#233; encontrar o caminho de volta.</p>
+          <p>Quando a gente se encontrou de novo, n&#227;o pareceu s&#243; coincid&#234;ncia. Pareceu que ainda tinha alguma coisa nossa esperando a hora certa pra acontecer. Agora eu quero saber se voc&#234; guardou esse dia tamb&#233;m.</p>
+        </div>
+        <button class="memory-reveal-button" id="memory-reveal" type="button">Claro que eu lembro</button>
+      </article>
+
+      <form class="memory-question" id="memory-form" aria-hidden="true" novalidate>
+        <div class="memory-heart" aria-hidden="true">&#10084;</div>
+        <h2>Qual foi o dia do nosso recome&#231;o?</h2>
+        <p class="memory-question-copy">Digite s&#243; os n&#250;meros. As barras aparecem sozinhas.</p>
+        <label class="memory-date-label" for="memory-date">A nossa data</label>
+        <input
+          class="memory-date-input"
+          id="memory-date"
+          name="memory-date"
+          type="text"
+          inputmode="numeric"
+          enterkeyhint="done"
+          autocomplete="off"
+          autocorrect="off"
+          autocapitalize="off"
+          spellcheck="false"
+          maxlength="10"
+          pattern="[0-9]{2}/[0-9]{2}/[0-9]{4}"
+          placeholder="DD/MM/AAAA"
+          aria-describedby="memory-format memory-feedback"
+          aria-invalid="false"
+        />
+        <p class="memory-format" id="memory-format">Formato aceito: <strong>DD/MM/AAAA</strong></p>
+        <p class="memory-feedback" id="memory-feedback" aria-live="polite"></p>
+      </form>
+
+      <div class="memory-success" id="memory-success" aria-hidden="true" aria-live="polite">
+        <div class="memory-heart" aria-hidden="true">&#10084;</div>
+        <h2>Eu sabia.</h2>
+        <p class="memory-success-date">26 de abril de 2026.</p>
+        <p class="memory-success-copy">Foi o dia em que a gente decidiu parar de s&#243; falar e tentar de verdade. Eu guardei essa data porque foi quando come&#231;ou o nosso agora.</p>
+      </div>
+    </div>
+  </section>
+  <section class="love-stage" id="love-stage" hidden aria-hidden="true" aria-labelledby="love-title">
     <div class="love-stage-content">
       <div class="love-intro" id="love-intro">
         <h2 id="love-title">Amor &#233;<span>...</span></h2>
@@ -1208,7 +1548,7 @@
       </div>
     </div>
   </section>
-  <section class="letter-suspense" id="letter-suspense" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Antes da carta">
+  <section class="letter-suspense" id="letter-suspense" hidden role="dialog" aria-modal="true" aria-hidden="true" aria-label="Antes da carta">
     <div class="suspense-shell" aria-live="polite">
       <article class="suspense-step" data-suspense-step="0" aria-hidden="true">
         <div class="suspense-heart" aria-hidden="true">&#10084;</div>
@@ -1235,7 +1575,7 @@
       </article>
     </div>
   </section>
-  <section class="declaration" id="declaration" aria-labelledby="declaration-title">
+  <section class="declaration" id="declaration" hidden aria-hidden="true" aria-labelledby="declaration-title">
     <article class="letter">
       <div class="letter-visual" aria-hidden="true">
         <img src="img/photo_2026-07-17_15-45-00.jpg" alt="" />
@@ -1253,7 +1593,7 @@
       </div>
     </article>
   </section>
-  <main class="page">
+  <main class="page" id="question-page" hidden aria-hidden="true">
     <section class="copy" aria-labelledby="title">
       <p class="kicker">Agora &#233; de verdade</p>
       <h1 id="title"><span class="title-name">Janis,</span><span class="title-question">aceita <strong>namorar</strong> comigo?</span></h1>
@@ -1279,9 +1619,9 @@
     </aside>
   </main>
 
-  <div class="hearts" aria-hidden="true"><span>&#10084;</span><span>&#10084;</span><span>&#10084;</span></div>
+  <div class="hearts" id="question-hearts" hidden aria-hidden="true"><span>&#10084;</span><span>&#10084;</span><span>&#10084;</span></div>
 
-  <section class="success" id="success" aria-modal="true" aria-labelledby="success-title" role="dialog">
+  <section class="success" id="success" hidden aria-hidden="true" aria-modal="true" aria-labelledby="success-title" role="dialog">
     <div class="success-card">
       <div class="success-mark" aria-hidden="true">&#10084;</div>
       <p class="success-eyebrow">Voc&#234; disse sim</p>
@@ -1307,6 +1647,13 @@
     const progressFill = document.querySelector('#progress-fill');
     const progressCopy = document.querySelector('#progress-copy');
     const tapCount = document.querySelector('#tap-count');
+    const memoryStage = document.querySelector('#memory-stage');
+    const memoryStory = document.querySelector('#memory-story');
+    const memoryReveal = document.querySelector('#memory-reveal');
+    const memoryForm = document.querySelector('#memory-form');
+    const memoryDateInput = document.querySelector('#memory-date');
+    const memoryFeedback = document.querySelector('#memory-feedback');
+    const memorySuccess = document.querySelector('#memory-success');
     const loveStage = document.querySelector('#love-stage');
     const loveIntro = document.querySelector('#love-intro');
     const loveReveal = document.querySelector('#love-reveal');
@@ -1320,6 +1667,8 @@
     const declaration = document.querySelector('#declaration');
     const reveal = document.querySelector('#reveal');
     const loveSong = document.querySelector('#love-song');
+    const questionPage = document.querySelector('#question-page');
+    const questionHearts = document.querySelector('#question-hearts');
     const yesButton = document.querySelector('#yes');
     const hint = document.querySelector('#hint');
     const zone = document.querySelector('.buttons');
@@ -1342,8 +1691,127 @@
     let previous = { x: 160, y: 10 };
     let musicOn = false;
     let progressTaps = 0;
+    let memoryAttempts = 0;
+    let memorySolved = false;
+    let memoryResetTimer;
     let loveSequenceStarted = false;
     let suspenseReadyTimer;
+
+    function formatMemoryDate(value) {
+      const digits = value.replace(/\D/g, '').slice(0, 8);
+      const parts = [];
+      if (digits.length > 0) parts.push(digits.slice(0, 2));
+      if (digits.length > 2) parts.push(digits.slice(2, 4));
+      if (digits.length > 4) parts.push(digits.slice(4, 8));
+      return { digits, formatted: parts.join('/') };
+    }
+
+    function showMemoryChallenge() {
+      memoryStage.hidden = false;
+      memoryStage.setAttribute('aria-hidden', 'false');
+      memoryStage.classList.remove('hide', 'is-asking', 'is-solved');
+      memoryStage.classList.add('show');
+      memoryStage.scrollTop = 0;
+    }
+
+    function continueAfterMemory() {
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const revealDelay = reducedMotion ? 500 : 1850;
+
+      setTimeout(() => {
+        loveStage.hidden = false;
+        loveStage.setAttribute('aria-hidden', 'false');
+        startLoveSequence();
+      }, revealDelay);
+
+      setTimeout(() => {
+        loveStage.classList.add('show');
+      }, revealDelay + (reducedMotion ? 0 : 500));
+
+      setTimeout(() => {
+        memoryStage.classList.add('hide');
+      }, revealDelay + (reducedMotion ? 10 : 700));
+
+      setTimeout(() => {
+        memoryStage.classList.remove('show', 'hide', 'is-asking', 'is-solved');
+        memoryStage.hidden = true;
+        memoryStage.setAttribute('aria-hidden', 'true');
+      }, revealDelay + (reducedMotion ? 30 : 1160));
+    }
+
+    function solveMemoryChallenge() {
+      if (memorySolved) return;
+      memorySolved = true;
+      clearTimeout(memoryResetTimer);
+      memoryDateInput.disabled = true;
+      memoryDateInput.setAttribute('aria-invalid', 'false');
+      memoryDateInput.classList.remove('is-wrong');
+      memoryFeedback.textContent = '';
+      memoryForm.setAttribute('aria-hidden', 'true');
+      memorySuccess.setAttribute('aria-hidden', 'false');
+      memoryStage.classList.remove('is-asking');
+      memoryStage.classList.add('is-solved');
+      continueAfterMemory();
+    }
+
+    function validateMemoryDate() {
+      if (memorySolved) return;
+      const { digits } = formatMemoryDate(memoryDateInput.value);
+
+      if (digits.length < 8) {
+        memoryFeedback.textContent = 'Falta completar a data inteira.';
+        return;
+      }
+
+      if (digits === '26042026') {
+        solveMemoryChallenge();
+        return;
+      }
+
+      memoryAttempts += 1;
+      const wrongMessages = [
+        'Essa n\u00e3o, Janis... pensa no dia em que a gente decidiu tentar de verdade.',
+        'Quase. Uma dica: foi num domingo de abril de 2026.',
+        'Eu sei que voc\u00ea sabe. Respira e tenta mais uma vez.'
+      ];
+      memoryDateInput.disabled = true;
+      memoryDateInput.setAttribute('aria-invalid', 'true');
+      memoryDateInput.classList.remove('is-wrong');
+      void memoryDateInput.offsetWidth;
+      memoryDateInput.classList.add('is-wrong');
+      memoryFeedback.textContent = wrongMessages[Math.min(memoryAttempts - 1, wrongMessages.length - 1)];
+
+      clearTimeout(memoryResetTimer);
+      memoryResetTimer = setTimeout(() => {
+        memoryDateInput.value = '';
+        memoryDateInput.disabled = false;
+        memoryDateInput.classList.remove('is-wrong');
+        memoryDateInput.focus({ preventScroll: true });
+      }, 850);
+    }
+
+    memoryReveal.addEventListener('click', () => {
+      memoryReveal.disabled = true;
+      memoryStory.setAttribute('aria-hidden', 'true');
+      memoryForm.setAttribute('aria-hidden', 'false');
+      memoryStage.classList.add('is-asking');
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      setTimeout(() => memoryDateInput.focus({ preventScroll: true }), reducedMotion ? 20 : 560);
+    });
+
+    memoryDateInput.addEventListener('input', () => {
+      if (memorySolved) return;
+      const { digits, formatted } = formatMemoryDate(memoryDateInput.value);
+      memoryDateInput.value = formatted;
+      memoryDateInput.setAttribute('aria-invalid', 'false');
+      memoryFeedback.textContent = '';
+      if (digits.length === 8) validateMemoryDate();
+    });
+
+    memoryForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      validateMemoryDate();
+    });
 
     function startLoveSequence() {
       if (loveSequenceStarted) return;
@@ -1389,6 +1857,8 @@
 
     enter.addEventListener('click', () => {
       enter.disabled = true;
+      heartTransition.hidden = false;
+      heartTransition.setAttribute('aria-hidden', 'false');
       heartTransition.classList.remove('hide', 'open');
       heartTransition.classList.add('show');
       startMusic();
@@ -1401,6 +1871,8 @@
       });
 
       setTimeout(() => {
+        progressStage.hidden = false;
+        progressStage.setAttribute('aria-hidden', 'false');
         progressStage.classList.add('show');
       }, 900);
 
@@ -1410,6 +1882,10 @@
 
       setTimeout(() => {
         heartTransition.classList.remove('show', 'open', 'hide');
+        heartTransition.hidden = true;
+        heartTransition.setAttribute('aria-hidden', 'true');
+        intro.hidden = true;
+        intro.setAttribute('aria-hidden', 'true');
       }, 1520);
     });
 
@@ -1429,10 +1905,9 @@
 
       fillButton.textContent = 'Pronto';
       fillButton.disabled = true;
-      progressCopy.textContent = 'Agora sim. Amor \u00e9 uma surpresa bonita quando a gente vive junto.';
+      progressCopy.textContent = 'Agora sim. Mas antes de continuar, eu quero ver se voc\u00ea lembra de uma coisa.';
       setTimeout(() => {
-        loveStage.classList.add('show');
-        startLoveSequence();
+        showMemoryChallenge();
       }, 360);
 
       setTimeout(() => {
@@ -1441,6 +1916,8 @@
 
       setTimeout(() => {
         progressStage.classList.remove('show', 'hide');
+        progressStage.hidden = true;
+        progressStage.setAttribute('aria-hidden', 'true');
       }, 1200);
     });
 
@@ -1467,6 +1944,7 @@
     }
 
     function showLetterSuspense() {
+      letterSuspense.hidden = false;
       letterSuspense.classList.remove('hide');
       letterSuspense.classList.add('show');
       letterSuspense.setAttribute('aria-hidden', 'false');
@@ -1489,11 +1967,14 @@
     function openDeclaration() {
       clearTimeout(suspenseReadyTimer);
       suspenseOpenLetter.disabled = true;
+      declaration.hidden = false;
+      declaration.setAttribute('aria-hidden', 'false');
       declaration.classList.add('show');
       letterSuspense.classList.add('hide');
 
       setTimeout(() => {
         letterSuspense.classList.remove('show', 'hide');
+        letterSuspense.hidden = true;
         letterSuspense.setAttribute('aria-hidden', 'true');
         suspenseSteps.forEach((step) => {
           step.classList.remove('is-active', 'is-leaving', 'is-ready');
@@ -1511,6 +1992,8 @@
 
       setTimeout(() => {
         loveStage.classList.remove('show', 'hide');
+        loveStage.hidden = true;
+        loveStage.setAttribute('aria-hidden', 'true');
       }, 680);
     });
 
@@ -1521,7 +2004,18 @@
       declaration.classList.add('hide');
       setTimeout(() => {
         declaration.classList.remove('show', 'hide');
-        yesButton.focus();
+        declaration.hidden = true;
+        declaration.setAttribute('aria-hidden', 'true');
+        questionPage.hidden = false;
+        questionPage.setAttribute('aria-hidden', 'false');
+        questionHearts.hidden = false;
+        document.documentElement.classList.remove('experience-locked');
+        document.body.classList.remove('experience-locked');
+        window.scrollTo(0, 0);
+        requestAnimationFrame(() => {
+          placeNoButtonAtStart();
+          yesButton.focus();
+        });
       }, 640);
     });
 
@@ -1627,14 +2121,19 @@
       escapes += 1;
     }
 
-    placeNoButtonAtStart();
-    window.addEventListener('resize', placeNoButtonAtStart);
+    window.addEventListener('resize', () => {
+      if (!questionPage.hidden) placeNoButtonAtStart();
+    });
     noButton.addEventListener('pointerenter', moveNoButton);
     noButton.addEventListener('pointerdown', (event) => { event.preventDefault(); moveNoButton(); });
     noButton.addEventListener('focus', moveNoButton);
     noButton.addEventListener('click', (event) => { event.preventDefault(); });
 
     yesButton.addEventListener('click', () => {
+      success.hidden = false;
+      success.setAttribute('aria-hidden', 'false');
+      document.documentElement.classList.add('experience-locked');
+      document.body.classList.add('experience-locked');
       success.classList.add('show');
       launchConfetti();
     });
