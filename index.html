@@ -480,19 +480,6 @@
       filter: saturate(0.96) contrast(1.03);
     }
 
-    .letter-monogram {
-      position: absolute;
-      bottom: 2.3rem;
-      left: 2.3rem;
-      z-index: 1;
-      margin: 0;
-      color: var(--rose-light);
-      font-size: clamp(5rem, 11vw, 9rem);
-      font-weight: 800;
-      letter-spacing: -0.1em;
-      line-height: 0.8;
-    }
-
     .letter-content {
       display: flex;
       flex-direction: column;
@@ -717,7 +704,7 @@
 
     .buttons {
       position: relative;
-      min-height: 86px;
+      min-height: 144px;
       margin-top: 0.75rem;
     }
 
@@ -751,11 +738,12 @@
     #no {
       position: absolute;
       top: 10px;
-      left: 138px;
+      left: 160px;
       color: var(--text);
       background: rgba(255,255,255,0.1);
       box-shadow: inset 0 1px 0 rgba(255,255,255,0.14);
-      will-change: transform;
+      transition: transform 180ms cubic-bezier(.16,1,.3,1), box-shadow 180ms ease, opacity 120ms ease;
+      will-change: left, top, transform;
     }
 
     .hint {
@@ -839,6 +827,7 @@
       display: grid;
       place-items: center;
       padding: 1.5rem;
+      overflow-y: auto;
       background: rgba(20, 4, 12, 0.7);
       opacity: 0;
       pointer-events: none;
@@ -849,8 +838,9 @@
     .success.show { opacity: 1; pointer-events: auto; }
 
     .success-card {
-      width: min(100%, 570px);
-      padding: clamp(2rem, 7vw, 4.3rem);
+      width: min(100%, 700px);
+      margin: auto;
+      padding: clamp(2rem, 6vw, 4rem);
       text-align: center;
       border: 1px solid rgba(255,255,255,0.22);
       border-radius: 32px;
@@ -863,27 +853,76 @@
     }
 
     .show .success-card { transform: translateY(0) scale(1); }
-    .success-mark { font-size: 4rem; line-height: 1; }
-    .success h2 { margin: 1.1rem 0 0; font-size: clamp(2.5rem, 9vw, 4.6rem); letter-spacing: -0.065em; line-height: 0.95; }
-    .success p { margin: 1rem auto 1.8rem; color: var(--rose-light); font-size: 1.08rem; line-height: 1.55; }
-    .success button { color: #2b0717; background: var(--rose); }
+    .success-mark {
+      display: grid;
+      place-items: center;
+      width: 4.6rem;
+      height: 4.6rem;
+      margin: 0 auto;
+      color: var(--rose);
+      font-size: 2.2rem;
+      line-height: 1;
+      border: 1px solid rgba(255, 151, 189, 0.34);
+      border-radius: 50%;
+      background: rgba(255, 79, 143, 0.12);
+      box-shadow: 0 0 40px rgba(255, 79, 143, 0.2);
+      animation: heartBeat 1.8s ease-in-out infinite;
+    }
+
+    .success-eyebrow {
+      margin: 1.25rem auto 0;
+      color: var(--rose);
+      font-size: 0.74rem;
+      font-weight: 900;
+      letter-spacing: 0.22em;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
+    .success h2 {
+      max-width: 12ch;
+      margin: 0.75rem auto 0;
+      font-size: clamp(2.35rem, 7vw, 4.35rem);
+      letter-spacing: -0.06em;
+      line-height: 0.98;
+    }
+
+    .success-copy {
+      max-width: 49ch;
+      margin: 1.2rem auto 0;
+      color: var(--rose-light);
+      font-size: clamp(1rem, 2.3vw, 1.12rem);
+      line-height: 1.65;
+    }
+
+    .success-signoff {
+      margin: 1rem auto 0;
+      color: var(--paper);
+      font-size: clamp(1.02rem, 2.5vw, 1.2rem);
+      font-weight: 850;
+      line-height: 1.45;
+    }
 
     .memories {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 0.65rem;
-      margin: 0 auto 1.9rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(1rem, 3vw, 1.8rem);
+      max-width: 560px;
+      margin: 2.25rem auto 0;
     }
 
     .memories img {
       display: block;
-      width: 100%;
-      aspect-ratio: 1;
+      width: clamp(82px, 27%, 160px);
+      height: auto;
+      max-height: 215px;
       object-fit: contain;
       object-position: center;
       background: #210b17;
       border: 2px solid rgba(255,255,255,0.35);
-      border-radius: 12px;
+      border-radius: 16px;
+      box-shadow: 0 14px 34px rgba(0,0,0,0.3);
     }
 
     .memories img:nth-child(1) { transform: rotate(-4deg) translateY(4px); }
@@ -921,7 +960,6 @@
       .letter { grid-template-columns: 1fr; margin: 0; }
       .letter-visual { min-height: 215px; max-height: 250px; }
       .letter-visual img { object-position: center 43%; }
-      .letter-monogram { bottom: 1.1rem; left: 1.25rem; font-size: 5.6rem; }
       .letter-content { padding: 2rem 1.5rem 2.2rem; }
       .letter h2 { max-width: 14ch; font-size: clamp(2.25rem, 11vw, 3.35rem); }
       .music-toggle { top: 1.1rem; right: 1.1rem; }
@@ -933,6 +971,12 @@
     }
 
     @media (max-width: 520px) {
+      .success { padding: 0.85rem; }
+      .success-card { padding: 1.8rem 1.15rem 2rem; border-radius: 24px; }
+      .success-mark { width: 4rem; height: 4rem; font-size: 1.9rem; }
+      .success-copy { line-height: 1.55; }
+      .memories { gap: 0.85rem; margin-top: 1.8rem; }
+      .memories img { border-radius: 13px; }
       .love-stage-content { min-height: min(560px, calc(100dvh - 2rem)); }
       .love-frames { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
       .love-frame { padding: 0.35rem 0.35rem 0.65rem; border-radius: 12px; }
@@ -943,8 +987,8 @@
     }
 
     @media (max-width: 390px) {
-      #no { left: 125px; }
-      .question-zone { min-height: 182px; }
+      #no { top: 82px; left: 0; }
+      .question-zone { min-height: 230px; }
       .note { right: -0.7rem; }
     }
   </style>
@@ -956,7 +1000,7 @@
   </audio>
   <section class="intro" id="intro" aria-labelledby="intro-title">
     <div class="intro-content">
-      <div class="intro-heart" aria-hidden="true">?</div>
+      <div class="intro-heart" aria-hidden="true">&#10084;</div>
       <p class="intro-eyebrow">Antes de continuar</p>
       <h1 class="intro-title" id="intro-title"><span>Agora n&#243;s vamos falar</span><span>de um assunto muito s&#233;rio.</span></h1>
       <p class="intro-copy">Quero que voc&#234; leia com bastante aten&#231;&#227;o. Sem pressa, porque eu preparei isso com muito carinho.</p>
@@ -996,10 +1040,9 @@
     <article class="letter">
       <div class="letter-visual" aria-hidden="true">
         <img src="img/photo_2026-07-17_15-45-00.jpg" alt="" />
-        <p class="letter-monogram">J</p>
       </div>
       <div class="letter-content">
-        <p class="letter-address">Janis,</p>
+        <p class="letter-address">Janis Mara,</p>
         <h2 id="declaration-title">Dessa vez eu quero fazer dar certo.</h2>
         <p class="letter-copy">Faz uns dez anos que a gente se conheceu. Depois voc&#234; foi viver a sua vida, eu fui viver a minha, e por muito tempo ficou assim. Agora a gente se encontrou de novo, quando eu nem esperava, e eu n&#227;o quero tratar isso como uma coisa qualquer.</p>
         <p class="letter-copy">Hoje eu t&#244; aqui nos Estados Unidos e voc&#234; a&#237; no Brasil. Essa dist&#226;ncia &#233; uma merda, mas eu j&#225; t&#244; voltando. Eu fico pensando em como vai ser bom ter voc&#234; perto de verdade, sem celular e sem saudade no meio.</p>
@@ -1038,19 +1081,20 @@
     </aside>
   </main>
 
-  <div class="hearts" aria-hidden="true"><span>?</span><span>?</span><span>?</span></div>
+  <div class="hearts" aria-hidden="true"><span>&#10084;</span><span>&#10084;</span><span>&#10084;</span></div>
 
   <section class="success" id="success" aria-modal="true" aria-labelledby="success-title" role="dialog">
     <div class="success-card">
-      <div class="success-mark" aria-hidden="true">?</div>
-      <h2 id="success-title">Eu sabia!</h2>
-      <p>Agora &#233; oficial: voc&#234; acabou de deixar o seu amor muito feliz.</p>
+      <div class="success-mark" aria-hidden="true">&#10084;</div>
+      <p class="success-eyebrow">Voc&#234; disse sim</p>
+      <h2 id="success-title">Agora &#233; n&#243;s dois, Janis.</h2>
+      <p class="success-copy">Depois de tantos anos, da dist&#226;ncia e de a vida colocar a gente no mesmo caminho de novo, agora come&#231;a a parte que eu mais queria: viver isso de verdade com voc&#234;.</p>
+      <p class="success-signoff">Eu te amo. Obrigado por me escolher tamb&#233;m.</p>
       <div class="memories" aria-label="Momentos de Janis e seu amor">
         <img src="img/photo_2026-07-17_15-44-51.jpg" alt="Janis e seu amor juntos" />
         <img src="img/photo_2026-07-17_15-44-58.jpg" alt="Porta-retrato com momentos do casal" />
         <img src="img/photo_2026-07-17_15-45-02.jpg" alt="Janis sorrindo com um presente rom&#226;ntico" />
       </div>
-      <button id="again" type="button">Ver de novo</button>
     </div>
   </section>
   <canvas id="confetti" aria-hidden="true"></canvas>
@@ -1079,7 +1123,6 @@
     const hint = document.querySelector('#hint');
     const zone = document.querySelector('.buttons');
     const success = document.querySelector('#success');
-    const again = document.querySelector('#again');
     const messages = [
       'Esse bot\u00e3o est\u00e1 com vergonha.',
       'Opa. Quase, mas n\u00e3o.',
@@ -1088,8 +1131,10 @@
       'Esse caminho n\u00e3o leva a lugar nenhum.',
       'Ele est\u00e1 muito r\u00e1pido hoje.'
     ];
+    const noSafeGap = 18;
+    const yesMaxScale = 1.18;
     let escapes = 0;
-    let previous = { x: 138, y: 10 };
+    let previous = { x: 160, y: 10 };
     let musicOn = false;
     let progressTaps = 0;
     let loveSequenceStarted = false;
@@ -1243,35 +1288,103 @@
     document.addEventListener('pointerdown', startMusic, { once: true });
     document.addEventListener('keydown', startMusic, { once: true });
 
-    function moveNoButton() {
-      const zoneRect = zone.getBoundingClientRect();
-      const buttonRect = noButton.getBoundingClientRect();
-      const maxX = Math.max(0, zoneRect.width - buttonRect.width - 4);
-      const maxY = Math.max(0, zoneRect.height - buttonRect.height - 2);
-      let x = Math.random() * maxX;
-      let y = Math.random() * maxY;
+    function getNoMovementBounds() {
+      return {
+        width: noButton.offsetWidth,
+        height: noButton.offsetHeight,
+        maxX: Math.max(0, zone.clientWidth - noButton.offsetWidth),
+        maxY: Math.max(0, zone.clientHeight - noButton.offsetHeight)
+      };
+    }
 
-      if (Math.abs(x - previous.x) < 70) x = (x + maxX * 0.55) % maxX;
-      previous = { x, y };
-      noButton.style.transform = `translate(${x - 138}px, ${y - 10}px) rotate(${(Math.random() * 10 - 5).toFixed(1)}deg)`;
+    function getYesSafeBounds() {
+      const scaledWidth = yesButton.offsetWidth * yesMaxScale;
+      const scaledHeight = yesButton.offsetHeight * yesMaxScale;
+      const centerX = yesButton.offsetLeft + yesButton.offsetWidth / 2;
+      const centerY = yesButton.offsetTop + yesButton.offsetHeight / 2;
+
+      return {
+        left: centerX - scaledWidth / 2 - noSafeGap,
+        right: centerX + scaledWidth / 2 + noSafeGap,
+        top: centerY - scaledHeight / 2 - noSafeGap,
+        bottom: centerY + scaledHeight / 2 + noSafeGap
+      };
+    }
+
+    function isNoPositionSafe(x, y, bounds, yesBounds) {
+      return x + bounds.width <= yesBounds.left
+        || x >= yesBounds.right
+        || y + bounds.height <= yesBounds.top
+        || y >= yesBounds.bottom;
+    }
+
+    function setNoPosition(position, rotate = true) {
+      previous = position;
+      noButton.style.left = `${position.x}px`;
+      noButton.style.top = `${position.y}px`;
+      noButton.style.transform = rotate
+        ? `rotate(${(Math.random() * 10 - 5).toFixed(1)}deg) scale(1.02)`
+        : 'rotate(0deg)';
+    }
+
+    function findSafeNoPosition() {
+      let bounds = getNoMovementBounds();
+      const yesBounds = getYesSafeBounds();
+      const minimumJump = Math.min(72, Math.max(bounds.maxX, bounds.maxY) * 0.34);
+      let farthest = null;
+
+      for (let attempt = 0; attempt < 100; attempt += 1) {
+        const x = Math.random() * bounds.maxX;
+        const y = Math.random() * bounds.maxY;
+        if (!isNoPositionSafe(x, y, bounds, yesBounds)) continue;
+
+        const distance = Math.hypot(x - previous.x, y - previous.y);
+        if (!farthest || distance > farthest.distance) farthest = { x, y, distance };
+        if (distance >= minimumJump) return { x, y };
+      }
+
+      if (farthest) return { x: farthest.x, y: farthest.y };
+
+      const requiredHeight = Math.ceil(yesBounds.bottom + bounds.height + 8);
+      zone.style.minHeight = `${Math.max(zone.clientHeight, requiredHeight)}px`;
+      bounds = getNoMovementBounds();
+      return {
+        x: Math.min(bounds.maxX, Math.max(0, previous.x)),
+        y: Math.min(bounds.maxY, Math.ceil(yesBounds.bottom))
+      };
+    }
+
+    function placeNoButtonAtStart() {
+      const bounds = getNoMovementBounds();
+      const yesBounds = getYesSafeBounds();
+      const rightPosition = { x: Math.ceil(yesBounds.right), y: 10 };
+      const belowPosition = { x: 0, y: Math.ceil(yesBounds.bottom) };
+      const startPosition = rightPosition.x <= bounds.maxX
+        && isNoPositionSafe(rightPosition.x, rightPosition.y, bounds, yesBounds)
+        ? rightPosition
+        : belowPosition;
+
+      setNoPosition(startPosition, false);
+    }
+
+    function moveNoButton() {
+      yesButton.style.transform = `scale(${Math.min(yesMaxScale, 1 + escapes * 0.025)})`;
+      setNoPosition(findSafeNoPosition());
       noButton.style.transitionDuration = `${Math.max(120, 320 - escapes * 13)}ms`;
       hint.textContent = messages[escapes % messages.length];
-      yesButton.style.transform = `scale(${Math.min(1.18, 1 + escapes * 0.025)})`;
       escapes += 1;
     }
 
+    placeNoButtonAtStart();
+    window.addEventListener('resize', placeNoButtonAtStart);
     noButton.addEventListener('pointerenter', moveNoButton);
     noButton.addEventListener('pointerdown', (event) => { event.preventDefault(); moveNoButton(); });
     noButton.addEventListener('focus', moveNoButton);
+    noButton.addEventListener('click', (event) => { event.preventDefault(); });
 
     yesButton.addEventListener('click', () => {
       success.classList.add('show');
       launchConfetti();
-    });
-
-    again.addEventListener('click', () => {
-      success.classList.remove('show');
-      clearConfetti();
     });
 
     let animationFrame;
